@@ -1,0 +1,52 @@
+CREATE TABLE Products (
+    ProductID INTEGER PRIMARY KEY,
+    ProductName TEXT
+);
+
+CREATE TABLE Orders (
+    OrderID INTEGER PRIMARY KEY,
+    ProductID INTEGER,
+    CustomerID INTEGER,
+    PurchaseDate TEXT,
+    FOREIGN KEY (ProductID) REFERENCES Products (ProductID)
+);
+
+
+INSERT INTO Products (ProductID, ProductName) VALUES (1, 'Hair Flair');
+INSERT INTO Products (ProductID, ProductName) VALUES (2, 'Skin Rich');
+INSERT INTO Products (ProductID, ProductName) VALUES (3, 'Strong Bone');
+
+-- Create the Orders table
+CREATE TABLE Orders (
+  OrderID INT PRIMARY KEY,
+  ProductID INT,
+  PurchaseDate DATE,
+  CustomerID VARCHAR(255)
+);
+
+-- Insert dummy data
+INSERT INTO Orders (OrderID, ProductID, PurchaseDate, CustomerID) VALUES
+(101, 1, '2023-08-10', 'john.doe@example.com'),
+(102, 2, '2023-08-05', 'jane.doe@example.com'),
+(103, 3, '2023-07-20', 'john.doe@example.com'),
+(104, 1, '2023-08-15', 'emily.doe@example.com');
+
+SELECT o.ProductID, o.PurchaseDate, p.ProductName 
+FROM Orders o
+JOIN Products p ON o.ProductID = p.ProductID
+WHERE o.CustomerID = ? AND o.PurchaseDate >= ?
+ORDER BY o.PurchaseDate DESC;
+
+Azure commands:
+
+ az group create --name TestGroup --location westus
+ 
+ az appservice plan create --name NodeJsAPI --resource-group TestGroup --sku FREE
+ 
+  az webapp create --name voiceflow --resource-group TestGroup --plan NodeJsAPI
+  
+ az webapp up --name voiceflow --> Giving me following error
+ Webapp 'voiceflow' already exists. The command will deploy contents to the existing app.
+The webapp 'voiceflow' is a Windows app. The code detected at 'C:\Users\winuser\Documents\AAA\return_policy' will default to 'Linux'. Please create a new app to continue this operation. For more information on default behaviors, see https://docs.microsoft.com/cli/azure/webapp?view=azure-cli-latest#az_webapp_up.
+
+az webapp up --name voiceflow --os-type windows  --> This worked
