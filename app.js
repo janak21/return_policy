@@ -2,6 +2,14 @@ const express = require('express');
 const mysql = require('mysql');
 const app = express();
 const port = 3000;
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 100, // maximum 100 requests per hour
+  message: "Too many requests, please try again later.",
+});
+
 require('dotenv').config();
 // Connect to MySQL database
 const db = mysql.createConnection({
@@ -18,7 +26,7 @@ db.connect((err) => {
 
 
 // API endpoint to check return eligibility for the last purchased product
-app.get('/checkLastProductReturnEligibility/:CustomerID', (req, res) => {
+app.get('/checkLastProductReturnEligibility/:CustomerID', limiter, (req, res) => {
   const { CustomerID } = req.params; // CustomerID is the email address
   const sql = `
     SELECT o.ProductID, o.PurchaseDate, p.ProductName 
